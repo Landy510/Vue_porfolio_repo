@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar/>
-    <Alert/>
+    <AlertMessage/>
     <div class="container-fluid">
       <div class="row">
         <ul class="list-group">
@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import Navbar from '../../components/Navbar'
-import Alert from '../../components/AlertMessage'
+import Navbar from '../../components/Navbar.vue'
+import AlertMessage from '../../components/AlertMessage.vue'
 export default {
   data () {
     return {
@@ -46,12 +46,13 @@ export default {
     }
   },
   created () {
+    const vm = this
     const myCookie = document.cookie.replace(/(?:(?:^|.*;\s*)Berserkertoken\s*=\s*([^;]*).*$)|^.*$/, '$1')
-    this.$http.defaults.headers.common.Authorization = myCookie
+    vm.$http.defaults.headers.common.Authorization = myCookie
   },
   components: {
     Navbar,
-    Alert
+    AlertMessage
   }
 }
 </script>

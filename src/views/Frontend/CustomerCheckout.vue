@@ -4,7 +4,7 @@
         <loading :active.sync="isLoading"></loading>
     </div>
     <Navbar></Navbar>
-    <Alert/>
+    <AlertMessage/>
     <div class="container my-5 flex-grow-1">
       <div class="d-none d-lg-flex mb-5">
         <div class="h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center d-flex justify-content-center align-items-center">
@@ -72,9 +72,9 @@
 </template>
 
 <script>
-import Alert from '../../components/AlertMessage'
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import AlertMessage from '../../components/AlertMessage.vue'
+import Navbar from '../../components/Navbar.vue'
+import Footer from '../../components/Footer.vue'
 export default {
   name: 'Customer1',
   data () {
@@ -117,7 +117,7 @@ export default {
     this.getList()
   },
   components: {
-    Alert,
+    AlertMessage,
     Navbar,
     Footer
   }

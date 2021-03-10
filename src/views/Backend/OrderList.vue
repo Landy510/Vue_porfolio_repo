@@ -26,12 +26,12 @@
         </tr>
       </tbody>
     </table>
-    <pagination :author="pagination" v-on:increment="getProducts"></pagination>
+    <Pagination :author="pagination" v-on:increment="getProducts"></Pagination>
   </div>
 </template>
 
 <script>
-import pagination from '../../components/Pagination'
+import Pagination from '../../components/Pagination.vue'
 export default {
   data () {
     return {
@@ -62,7 +62,7 @@ export default {
     this.getProducts()
   },
   components: {
-    pagination
+    Pagination
   }
 }
 </script>

@@ -4,7 +4,7 @@
       <loading :active.sync="isLoading"></loading>
     </div>
     <Navbar :product_num="product_length" v-on:increment="CounterCoupute"></Navbar>
-    <Alert/>
+    <AlertMessage/>
     <div class="container my-5">
       <div class="d-none d-lg-flex mb-5">
         <div class="h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center d-flex justify-content-center align-items-center">
@@ -192,9 +192,9 @@
 
 <script>
 import $ from 'jquery'
-import Alert from '../../components/AlertMessage'
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import AlertMessage from '../../components/AlertMessage.vue'
+import Navbar from '../../components/Navbar.vue'
+import Footer from '../../components/Footer.vue'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 export default {
   name: 'Customer1',
@@ -234,7 +234,7 @@ export default {
       const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`
       vm.isLoading = true
-      this.$http.delete(api).then((response) => {
+      vm.$http.delete(api).then((response) => {
         if (response.data.success) {
           vm.isLoading = false
           vm.$bus.$emit('messsage:push', response.data.message, 'danger')
@@ -252,8 +252,8 @@ export default {
       const coupon = {
         code: vm.coupon_code
       }
-      this.$http.post(api, { data: coupon }).then((response) => {
-        this.getList()
+      vm.$http.post(api, { data: coupon }).then((response) => {
+        vm.getList()
         vm.isLoading = false
       })
     },
@@ -270,7 +270,7 @@ export default {
       const order = vm.form
       vm.isLoading = true
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`
-      this.$http.post(api, { data: order }).then((response) => {
+      vm.$http.post(api, { data: order }).then((response) => {
         vm.isLoading = false
       })
     },
@@ -279,7 +279,7 @@ export default {
       const order = vm.form
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`
       vm.isLoading = true
-      this.$http.post(api, { data: order }).then((response) => {
+      vm.$http.post(api, { data: order }).then((response) => {
         if (response.data.success) {
           vm.$router.push(`/customerOrder/CustomerCheckout/${response.data.orderId}`) // 跳轉頁面
         }
@@ -291,7 +291,7 @@ export default {
     this.getList()
   },
   components: {
-    Alert,
+    AlertMessage,
     Navbar,
     Footer,
     ValidationProvider,

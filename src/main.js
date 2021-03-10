@@ -28,13 +28,20 @@ Vue.use(VueAwesomeSwiper /* { default options with global component } */)
 Vue.use(VueAxios, axios)
 Vue.component('Loading', Loading)
 Vue.config.productionTip = false
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
+axios.defaults.withCredentials = false
 Vue.filter('currency', currencyFilter)
 
 Object.keys(rules).forEach((rule) => {
   extend(rule, rules[rule])
 })
-
+localize('zh_TW', TW)
+configure({
+  classes: {
+    valid: 'is-valid',
+    invalid: 'is-invalid'
+  }
+})
 new Vue({
   router,
   render: h => h(App)
@@ -55,12 +62,5 @@ router.beforeEach((to, from, next) => {
     )
   } else {
     next()
-  }
-})
-localize('zh_TW', TW)
-configure({
-  classes: {
-    valid: 'is-valid',
-    invalid: 'is-invalid'
   }
 })

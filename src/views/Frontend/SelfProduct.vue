@@ -116,8 +116,8 @@
 
 <script>
 import $ from 'jquery'
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import Navbar from '../../components/Navbar.vue'
+import Footer from '../../components/Footer.vue'
 import { Carousel, Slide } from 'vue-carousel'
 export default {
   data () {
@@ -141,7 +141,7 @@ export default {
         if (response.data.success) {
           vm.lecture = response.data.product
           vm.isLoading = false
-          this.getRelateProducts()
+          vm.getRelateProducts()
         }
       })
     },
@@ -219,7 +219,7 @@ export default {
       const vm = this
       vm.isLoading = true
       const cacheID = []
-      vm.axios.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
+      vm.$http.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
         .then((res) => {
           const cacheData = res.data.data.carts
           cacheData.forEach((item) => {
@@ -227,7 +227,7 @@ export default {
           })
         }).then(() => {
           cacheID.forEach((item) => {
-            vm.axios.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${item}`).then(() => {
+            vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${item}`).then(() => {
               console.log('購物車已經清空')
             })
           })
@@ -237,7 +237,7 @@ export default {
               product_id: item.product_id,
               qty: item.qty
             }
-            vm.axios.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache })
+            vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache })
               .then(() => {
                 vm.cartData = []
                 localStorage.removeItem('cartData')
@@ -248,7 +248,8 @@ export default {
         })
     },
     CounterCoupute (cartTotalLength) {
-      this.product_length = cartTotalLength
+      const vm = this
+      vm.product_length = cartTotalLength
     }
   },
   created () {
@@ -262,7 +263,7 @@ export default {
     Footer
   },
   computed: {
-    sameCategoryFilter: function () {
+    sameCategoryFilter () {
       const vm = this
       return vm.products.filter((item) => item.category === vm.lecture.category && item.title !== vm.lecture.title)
     }
@@ -270,7 +271,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .card{
   border:0px;
   cursor:pointer;

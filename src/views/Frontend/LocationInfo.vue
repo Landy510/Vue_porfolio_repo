@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="vld-parent">
+      <loading :active.sync="isLoading"></loading>
+    </div>
     <Navbar :product_num="product_length" v-on:increment="CounterCoupute"></Navbar>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb bg-transparent border border-bottom">
@@ -36,8 +39,8 @@
 </template>
 
 <script>
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import Navbar from '../../components/Navbar.vue'
+import Footer from '../../components/Footer.vue'
 import L from 'leaflet'
 let osmMap = {}
 const storeTile = ['Berserker 美麗華店', 'Berserker 南西店', 'Berserker 西門漢中店', 'Berserker 台中都會店', 'Berserker 佳瑪店', 'Berserker 大江購物店', 'Berserker 家樂福店', 'Berserker 勤美成品店']
@@ -51,7 +54,8 @@ export default {
     return {
       product_length: 0,
       data: [],
-      selectlocation: ''
+      selectlocation: '',
+      isLoading: false
     }
   },
   methods: {
@@ -82,20 +86,16 @@ export default {
   },
   mounted () {
     const vm = this
-    const xhr = new XMLHttpRequest()
-    xhr.open('GET', 'https://datacenter.taichung.gov.tw/swagger/OpenData/8f477165-6874-4856-b60d-38029958e723', true)
-    xhr.withCredentials = false
-    xhr.send(null)
-    xhr.onload = function () {
-      vm.data = xhr.response
-      vm.data = JSON.parse(xhr.response)
+    const api = 'https://datacenter.taichung.gov.tw/swagger/OpenData/8f477165-6874-4856-b60d-38029958e723'
+    vm.$http.get(api).then((Response) => {
+      vm.data = Response.data
       for (let i = 0; i !== vm.data.length; i++) {
         vm.data[i].image = storeImage[i]
         vm.data[i]['場地名稱'] = storeTile[i]
         vm.data[i].decription = storedecription[i]
       }
       vm.updateMap()
-    }
+    })
     osmMap = L.map('map', {
       center: [24.130993, 120.721122],
       zoom: 10

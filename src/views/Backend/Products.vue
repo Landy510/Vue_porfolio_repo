@@ -149,13 +149,13 @@
         </div>
       </div>
     </div>
-    <pagination :author="pagination" v-on:increment="getProducts"></pagination>
+    <Pagination :author="pagination" v-on:increment="getProducts"></Pagination>
   </div>
 </template>
 
 <script>
 import $ from 'jquery'
-import pagination from '../../components/Pagination'
+import Pagination from '../../components/Pagination.vue'
 export default {
   data () {
     return {
@@ -197,7 +197,7 @@ export default {
     Delproduct () {
       const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProduct.id}`
-      this.$http.delete(api).then((response) => {
+      vm.$http.delete(api).then((response) => {
         if (response.data.success) {
           $('#delProductModal').modal('hide')
           vm.getProducts()
@@ -215,7 +215,7 @@ export default {
         api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProduct.id}`
         httpMethod = 'put'
       }
-      this.$http[httpMethod](api, { data: vm.tempProduct }).then((response) => {
+      vm.$http[httpMethod](api, { data: vm.tempProduct }).then((response) => {
         if (response.data.success) {
           $('#productModal').modal('hide')
           vm.getProducts()
@@ -251,7 +251,7 @@ export default {
     this.getProducts()
   },
   components: {
-    pagination
+    Pagination
   }
 }
 </script>

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <alert/>
+    <AlertMessage/>
     <router-view/>
   </div>
 </template>
 
 <script>
-import alert from '../../components/AlertMessage'
+import AlertMessage from '../../components/AlertMessage.vue'
 export default {
   data () {
     return {
@@ -14,7 +14,7 @@ export default {
     }
   },
   components: {
-    alert
+    AlertMessage
   }
 }
 </script>

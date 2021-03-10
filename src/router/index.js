@@ -8,7 +8,7 @@ import Login from '../views/Frontend/Login.vue'
 
 import DashBoard from '../views/Backend/DashBoard.vue'
 import Coupon from '../views/Backend/Coupon.vue'
-import orderList from '../views/Backend/OrderList.vue'
+import OrderList from '../views/Backend/OrderList.vue'
 import Products from '../views/Backend/Products.vue'
 
 import Lecture from '../views/Frontend/Lecture.vue'
@@ -16,10 +16,10 @@ import LectureProduct from '../views/Frontend/LectureProduct.vue'
 import SelfProduct from '../views/Frontend/SelfProduct.vue'
 
 import Company from '../views/Frontend/Company.vue'
-import locationInfo from '../views/Frontend/LocationInfo.vue'
+import LocationInfo from '../views/Frontend/LocationInfo.vue'
 import CompanyDetail from '../views/Frontend/CompanyDetail.vue'
 
-import customerOrder from '../views/Frontend/CustomerOrder.vue'
+import CustomerOrder from '../views/Frontend/CustomerOrder.vue'
 import Customer1 from '../views/Frontend/Customer1.vue'
 import Customer2 from '../views/Frontend/Customer2.vue'
 import CustomerCheckout from '../views/Frontend/CustomerCheckout.vue'
@@ -59,8 +59,8 @@ const routes = [
     children: [
       {
         path: 'locationInfo',
-        name: 'locationInfo',
-        component: locationInfo
+        name: 'LocationInfo',
+        component: LocationInfo
       },
       {
         path: 'CompanyDetail',
@@ -72,16 +72,16 @@ const routes = [
   {
     path: '/customerOrder',
     name: 'CustomerOrder',
-    component: customerOrder,
+    component: CustomerOrder,
     children: [
       {
         path: 'customer1',
-        name: 'customer1',
+        name: 'Customer1',
         component: Customer1
       },
       {
         path: 'customer2',
-        name: 'customer2',
+        name: 'Customer2',
         component: Customer2
       },
       {
@@ -109,8 +109,8 @@ const routes = [
     children: [
       {
         path: 'orderList',
-        name: 'orderList',
-        component: orderList,
+        name: 'OrderList',
+        component: OrderList,
         meta: { requiresAuth: true }
       },
       {

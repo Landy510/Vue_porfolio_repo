@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Footer from '../../components/Footer'
+import Footer from '../../components/Footer.vue'
 export default {
   data () {
     return {
@@ -40,7 +40,7 @@ export default {
     signin: function () {
       const api = `${process.env.VUE_APP_APIPATH}/admin/signin`
       const vm = this
-      this.$http.post(api, vm.user).then((response) => {
+      vm.$http.post(api, vm.user).then((response) => {
         if (response.data.success) {
           const token = response.data.token
           const expired = response.data.expired

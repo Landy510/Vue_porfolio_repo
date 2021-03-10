@@ -85,8 +85,8 @@
 </template>
 
 <script>
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import Navbar from '../../components/Navbar.vue'
+import Footer from '../../components/Footer.vue'
 import $ from 'jquery'
 export default {
   data () {

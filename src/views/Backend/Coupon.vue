@@ -34,7 +34,7 @@
         </tr>
       </tbody>
     </table>
-    <pagination :author="pagination" v-on:increment="getList"></pagination>
+    <Pagination :author="pagination" v-on:increment="getList"></Pagination>
       <div class="modal fade" id="CouponModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content border-0">
@@ -120,7 +120,7 @@
 
 <script>
 import $ from 'jquery'
-import pagination from '../../components/Pagination'
+import Pagination from '../../components/Pagination.vue'
 export default {
   name: 'Coupon',
   data () {
@@ -151,7 +151,7 @@ export default {
         vm.isNew = true
       } else {
         vm.tempProduct = { ...item }
-        this.isNew = false
+        vm.isNew = false
       }
       $('#CouponModal').find('.modal-title').text(content)
     },
@@ -162,7 +162,7 @@ export default {
     delCoupon () {
       const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupon/${vm.tempProduct.id}`
-      this.$http.delete(api).then((response) => {
+      vm.$http.delete(api).then((response) => {
         if (response.data.success) {
           $('#delCouponModal').modal('hide')
         } else {
@@ -180,7 +180,7 @@ export default {
         api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupon/${vm.tempProduct.id}`
         httpMode = 'put'
       }
-      this.$http[httpMode](api, { data: vm.tempProduct }).then((response) => {
+      vm.$http[httpMode](api, { data: vm.tempProduct }).then((response) => {
         if (response.data.success) {
           vm.isLoading = false
           $('#CouponModal').modal('hide')
@@ -195,7 +195,7 @@ export default {
     this.getList()
   },
   components: {
-    pagination
+    Pagination
   }
 }
 </script>

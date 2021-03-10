@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import Navbar from '../../components/Navbar'
-import Footer from '../../components/Footer'
+import Navbar from '../../components/Navbar.vue'
+import Footer from '../../components/Footer.vue'
 export default {
   name: 'Customer1',
   data () {
@@ -54,7 +54,7 @@ export default {
       const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${vm.orderId}`
       vm.isLoading = true
-      this.$http.post(api).then((response) => {
+      vm.$http.post(api).then((response) => {
         vm.getList()
         vm.isLoading = false
       })

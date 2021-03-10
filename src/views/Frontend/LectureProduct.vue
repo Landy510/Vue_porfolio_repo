@@ -4,7 +4,7 @@
     <div class="vld-parent">
       <loading :active.sync="isLoading"></loading>
     </div>
-    <banner :introImage="image_website" :introImage_1="image_website1" :introImage_2="image_website2"></banner>
+    <Introbanner :introImage="image_website" :introImage_1="image_website1" :introImage_2="image_website2"></Introbanner>
     <div class="h2 text-center Lecture_title py-4 border-bottom">{{ Lecture_title }}</div>
     <div class="container mt-5">
       <div class="row">
@@ -151,9 +151,9 @@
 </template>
 
 <script>
-import Navbar from '../../components/Navbar'
-import banner from '../../components/Introbanner'
-import Footer from '../../components/Footer'
+import Navbar from '../../components/Navbar.vue'
+import Introbanner from '../../components/Introbanner.vue'
+import Footer from '../../components/Footer.vue'
 export default {
   data () {
     return {
@@ -206,11 +206,11 @@ export default {
       const vm = this
       vm.isLoading = true
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`
-      this.$http.post(api, { data: { product_id: id, qty: vm.qty } }).then((response) => {
+      vm.$http.post(api, { data: { product_id: id, qty: vm.qty } }).then((response) => {
         if (response.data.success) {
           vm.isLoading = false
           vm.$bus.$emit('messsage:push', response.data.message, 'success')
-          this.getList()
+          vm.getList()
         } else {
           vm.isLoading = false
           vm.$bus.$emit('messsage:push', response.data.message, 'danger')
@@ -277,7 +277,7 @@ export default {
   },
   components: {
     Navbar,
-    banner,
+    Introbanner,
     Footer
   },
   computed: {

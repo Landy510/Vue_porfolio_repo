@@ -178,9 +178,9 @@ export default {
   },
   methods: {
     signOut: function () {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/logout`
-      this.$http.post(api).then((response) => {
-        const vm = this
+      vm.$http.post(api).then((response) => {
         $('.login_status').css('color', 'red')
         if (response.data.success) {
           vm.$router.push('/login')
@@ -256,7 +256,7 @@ export default {
       const vm = this
       vm.isLoading = true
       const cacheID = []
-      vm.axios.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
+      vm.$http.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
         .then((res) => {
           const cacheData = res.data.data.carts
           cacheData.forEach((item) => {
@@ -264,7 +264,7 @@ export default {
           })
         }).then(() => {
           cacheID.forEach((item) => {
-            vm.axios.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${item}`).then(() => {
+            vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${item}`).then(() => {
               console.log('購物車已經清空')
             })
           })
@@ -274,7 +274,7 @@ export default {
               product_id: item.product_id,
               qty: item.qty
             }
-            vm.axios.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache })
+            vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache })
               .then(() => {
                 vm.cartData = []
                 localStorage.removeItem('cartData')
@@ -332,16 +332,17 @@ export default {
     }
   },
   created: function () {
+    const vm = this
     const api = `${process.env.VUE_APP_APIPATH}/api/user/check`
-    this.$http.post(api).then((response) => {
+    vm.$http.post(api).then((response) => {
       if (response.data.success) {
         $('.login_status').css('color', 'green')
       } else {
         $('.login_status').css('color', 'red')
       }
     })
-    this.getList()
-    this.getLike()
+    vm.getList()
+    vm.getLike()
   },
   mounted () {
     $('.location_search').on('click', function () {
