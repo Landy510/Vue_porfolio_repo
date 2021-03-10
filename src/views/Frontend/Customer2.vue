@@ -6,18 +6,16 @@
     <Navbar :product_num="product_length" v-on:increment="CounterCoupute"></Navbar>
     <AlertMessage/>
     <div class="container my-5">
-      <div class="d-none d-lg-flex mb-5">
-        <div class="h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center d-flex justify-content-center align-items-center">
-          <p class="m-0 text-dark font-weight-bold">購物車內容</p>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center finish_bar"></div>
+        <span class="progress-connect"></span>
+        <div class="d-flex justify-content-center align-items-center non_finish_bar">
+          <div style="height:30px; width:30px; background-color: yellow;"></div>
         </div>
-        <div class="h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center d-flex justify-content-center align-items-center">
-          <p class="m-0 text-dark font-weight-bold">填寫資料</p>
-        </div>
-        <div class="h3 alert alert-primary non_progress_bar border border-dark border-right-0 border-left-0 mx-auto text-center d-flex justify-content-center align-items-center rounded-0">
-          <p class="m-0 text-muted">資料確認</p>
-        </div>
+        <span class="progress-connect"></span>
+        <div class="non_finish_bar"></div>
       </div>
-      <div class="d-flex d-lg-none h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center justify-content-center align-items-center mb-5">
+      <div class="d-flex h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center justify-content-center align-items-center mb-5 mt-3 rounded-0">
         <p class="m-0 text-dark font-weight-bold">填寫資料</p>
       </div>
       <div class="row">
@@ -318,61 +316,10 @@ export default {
   transform: rotate(180deg);
   transition: all .5s;
 }
-.non_progress_bar{
-  width: 200px;
-  height: 50px;
-  background: #fff;
-}
-.non_progress_bar:before{
-  position: absolute;
-  background-color: #fff;
-  left: -25px;
-  top: 0;
-  width:50px;
-  height:49px;
-  content:" ";
-  border-radius:49%;
-  z-index:-1;
-  border:1px solid black;
-}
-.non_progress_bar:after{
-  position: absolute;
-  background-color: #fff;
-  right: -25px;
-  top: 0;
-  width:50px;
-  height:49px;
-  content:" ";
-  border-radius:50%;
-  z-index:-1;
-  border:1px solid black;
-}
 .progress_bar{
   width: 200px;
   height: 50px;
   z-index: 1;
-}
-.progress_bar:before{
-  position: absolute;
-  background-color: yellow;
-  left: -25px;
-  top: 0;
-  width:50px;
-  height:50px;
-  content:" ";
-  border-radius:50%;
-  z-index:-1;
-}
-.progress_bar:after{
-  position: absolute;
-  background-color: yellow;
-  right: -25px;
-  top: 0;
-  width:50px;
-  height:50px;
-  content:" ";
-  border-radius:50%;
-  z-index:-1;
 }
 .table_total_display{
   display:table-row;
@@ -382,6 +329,21 @@ export default {
 }
 .medium-text{
   font-size:16px;
+}
+.progress-connect{
+  width:200px;
+  height:3px;
+  background-color:black;
+}
+.finish_bar{
+  height:50px;
+  width:50px;
+  background-color: yellow;
+}
+.non_finish_bar{
+  height:50px;
+  width:50px;
+  border:4px solid yellow;
 }
 @media(max-width:760px){
   .table_total_display{
@@ -394,6 +356,14 @@ export default {
 @media(max-width:680px){
   .confirm_btn{
     width:100%;
+  }
+  .progress-connect{
+    width:100px;
+  }
+}
+@media(max-width:380px){
+  .progress-connect{
+    width:50px;
   }
 }
 </style>

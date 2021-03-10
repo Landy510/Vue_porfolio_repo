@@ -6,18 +6,16 @@
     <Navbar></Navbar>
     <AlertMessage/>
     <div class="container my-5 flex-grow-1">
-      <div class="d-none d-lg-flex mb-5">
-        <div class="h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center d-flex justify-content-center align-items-center">
-          <p class="m-0 text-dark font-weight-bold">購物車內容</p>
-        </div>
-        <div class="h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center d-flex justify-content-center align-items-center">
-          <p class="m-0 text-dark font-weight-bold">填寫資料</p>
-        </div>
-        <div class="h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center d-flex justify-content-center align-items-center">
-          <p class="m-0 text-dark font-weight-bold">資料確認</p>
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center finish_bar"></div>
+        <span class="progress-connect"></span>
+        <div class="d-flex justify-content-center align-items-center finish_bar"></div>
+        <span class="progress-connect"></span>
+        <div class="d-flex justify-content-center align-items-center non_finish_bar">
+          <div style="height:30px; width:30px; background-color: yellow;"></div>
         </div>
       </div>
-      <div class="d-flex d-lg-none h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center justify-content-center align-items-center mb-5">
+      <div class="d-flex h3 alert alert-primary bg-warning progress_bar mx-auto border-0 text-center justify-content-center align-items-center mb-5 mt-3 rounded-0">
         <p class="m-0 text-dark font-weight-bold">資料確認</p>
       </div>
       <div class="row">
@@ -28,7 +26,7 @@
           <h4 class="order-title mb-3">
             <font-awesome-icon class="mr-2" :icon="['fas', 'flag']" />訂單成立
           </h4>
-          <div class="px-5">
+          <div class="px-0 px-sm-4">
             <table class="table">
               <tbody>
                 <tr>
@@ -168,63 +166,27 @@ export default {
   z-index: -1;
 }
 /*---*/
-.non_progress_bar{
-  width: 200px;
-  height: 50px;
-  background: #fff;
-}
-.non_progress_bar:before{
-  position: absolute;
-  background-color: #fff;
-  left: -25px;
-  top: 0;
-  width:50px;
-  height:49px;
-  content:" ";
-  border-radius:49%;
-  z-index:-1;
-  border:1px solid black;
-}
-.non_progress_bar:after{
-  position: absolute;
-  background-color: #fff;
-  right: -25px;
-  top: 0;
-  width:50px;
-  height:49px;
-  content:" ";
-  border-radius:50%;
-  z-index:-1;
-  border:1px solid black;
-}
 .progress_bar{
   width: 200px;
   height: 50px;
   z-index: 1;
 }
-.progress_bar:before{
-  position: absolute;
-  background-color: yellow;
-  left: -25px;
-  top: 0;
-  width:50px;
-  height:50px;
-  content:" ";
-  border-radius:50%;
-  z-index:-1;
+.progress-connect{
+  width:200px;
+  height:3px;
+  background-color:black;
 }
-.progress_bar:after{
-  position: absolute;
-  background-color: yellow;
-  right: -25px;
-  top: 0;
-  width:50px;
+.finish_bar{
   height:50px;
-  content:" ";
-  border-radius:50%;
-  z-index:-1;
+  width:50px;
+  background-color: yellow;
 }
-@media(max-width:768px) {
+.non_finish_bar{
+  height:50px;
+  width:50px;
+  border:4px solid yellow;
+}
+@media(max-width:820px) {
   .order-title {
     width: 40%;
   }
@@ -232,6 +194,14 @@ export default {
 @media(max-width:680px){
   .confirm_btn{
     width:100%;
+  }
+  .progress-connect{
+    width:100px;
+  }
+}
+@media(max-width:380px){
+  .progress-connect{
+    width:50px;
   }
 }
 @media(max-width:360px){

@@ -56,8 +56,8 @@ export default {
 .scrollTop{
   display:none;
   position:fixed;
-  right:30px;
-  bottom:200px;
+  right:10px;
+  bottom:10px;
   z-index:9999;
 }
 </style>

@@ -166,7 +166,7 @@
           </div>
           <div class="modal-footer">
             <span class="h4 text-muted">小計 {{ product_detail.price*lecturenum }} 元</span>
-            <button type="button" class="btn btn-primary" @click="addToCart(product_detail, lecturenum)">加到購物車</button>
+            <button type="button" class="btn btn-warning rounded-0" @click="addToCart(product_detail, lecturenum)">加到購物車</button>
           </div>
         </div>
       </div>
@@ -199,7 +199,7 @@ export default {
       carts: [],
       cartData: JSON.parse(localStorage.getItem('carData')) || [], // 取出localStorage資料
       product_length: 0,
-      image_website: 'https://upload.cc/i1/2021/02/04/XVGje1.jpg',
+      image_website: 'https://upload.cc/i1/2021/03/10/0QKA7j.jpg',
       image_website1: 'https://upload.cc/i1/2021/02/18/cyrh8S.jpg',
       image_website2: 'https://upload.cc/i1/2020/12/26/5QczGW.jpg'
     }

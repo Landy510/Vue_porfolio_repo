@@ -34,7 +34,7 @@
               </a>
             </li>
             <li class="nav-item active">
-              <router-link to="/login" class="nav-link login_status" title="管理者登入">
+              <router-link to="/login" class="nav-link text-dark" title="管理者登入">
                 <font-awesome-icon :icon="['fas', 'users-cog']" />
               </router-link>
             </li>
@@ -181,7 +181,6 @@ export default {
       const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/logout`
       vm.$http.post(api).then((response) => {
-        $('.login_status').css('color', 'red')
         if (response.data.success) {
           vm.$router.push('/login')
         }
@@ -333,14 +332,6 @@ export default {
   },
   created: function () {
     const vm = this
-    const api = `${process.env.VUE_APP_APIPATH}/api/user/check`
-    vm.$http.post(api).then((response) => {
-      if (response.data.success) {
-        $('.login_status').css('color', 'green')
-      } else {
-        $('.login_status').css('color', 'red')
-      }
-    })
     vm.getList()
     vm.getLike()
   },

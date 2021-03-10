@@ -33,7 +33,7 @@
                             <span>{{ item.title }}</span>
                             <font-awesome-icon class="lecture_heart" :class="{'text-danger':item.like}" :icon="['far','heart']" size="lg" @click="getLike(item)"></font-awesome-icon>
                           </p>
-                          <p class="card-text mb-2 px-2 d-flex flex-column align-items-center text-muted" >
+                          <p class="card-text mb-2 px-2 text-muted" >
                             {{ item.description }}
                           </p>
                           <div class="d-flex justify-content-between align-items-end px-2">
@@ -64,7 +64,7 @@
                             <span>{{ item.title }}</span>
                             <font-awesome-icon class="lecture_heart" :class="{'text-danger':item.like}" :icon="['far','heart']" size="lg" @click="getLike(item)"></font-awesome-icon>
                           </p>
-                          <p class="card-text mb-2 px-2 d-flex flex-column align-items-center text-muted" >
+                          <p class="card-text mb-2 px-2 text-muted" >
                             {{ item.description }}
                           </p>
                           <div class="d-flex justify-content-between align-items-end px-2">
@@ -95,7 +95,7 @@
                             <span>{{ item.title }}</span>
                             <font-awesome-icon class="lecture_heart" :class="{'text-danger':item.like}" :icon="['far','heart']" size="lg" @click="getLike(item)"></font-awesome-icon>
                           </p>
-                          <p class="card-text mb-2 px-2 d-flex flex-column align-items-center text-muted" >
+                          <p class="card-text mb-2 px-2 text-muted" >
                             {{ item.description }}
                           </p>
                           <div class="d-flex justify-content-between align-items-end px-2">
@@ -126,7 +126,7 @@
                             <span>{{ item.title }}</span>
                             <font-awesome-icon class="lecture_heart" :class="{'text-danger':item.like}" :icon="['far','heart']" size="lg" @click="getLike(item)"></font-awesome-icon>
                           </p>
-                          <p class="card-text mb-2 px-2 d-flex flex-column align-items-center text-muted" >
+                          <p class="card-text mb-2 px-2 text-muted" >
                             {{ item.description }}
                           </p>
                           <div class="d-flex justify-content-between align-items-end px-2">
@@ -336,7 +336,7 @@ export default {
   font-size: 18px;
 }
 .lecture_card:hover{
-  box-shadow: 12px 12px 7px rgba(0, 0, 0, 0.7);
+  box-shadow: 12px 12px 7px rgba(0, 0, 0, 0.2);
   transition:all .5s;
 }
 .lecture_heart{
