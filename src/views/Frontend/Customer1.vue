@@ -133,9 +133,7 @@ export default {
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`
       vm.$http.get(url).then((response) => {
         if (response.data.data.carts) {
-          console.log('未讀取前的購物車', vm.carts)
           vm.carts = response.data.data.carts
-          console.log('讀取後的購物車', vm.carts)
           localStorage.setItem('cartData', JSON.stringify(vm.carts))
           vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
           vm.product_length = response.data.data.carts.length
@@ -200,7 +198,6 @@ export default {
       vm.$http.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
         .then((res) => {
           const cacheData = res.data.data.carts
-          console.log('customer1遠端取回的購物車', cacheData)
           cacheData.forEach((item) => {
             cacheID.push(item.id)
           })
@@ -227,19 +224,16 @@ export default {
         })
     },
     addToCart (data, num) {
-      console.log('要加入的商品資料', data)
       data.qty += num
       const vm = this
       const cartID = []
       vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
-      console.log('customer1取得的localStorage', vm.cartData)
       vm.cartData.forEach((item, index) => {
         cartID.push(item.product_id)
       })
       if (cartID.indexOf(data.product_id) === -1) {
-        console.log('沒有這筆資料')
         const cartContent = {
-          product_id: data.id,
+          product_id: data.product_id,
           qty: data.qty,
           name: data.title,
           origin_price: data.origin_price,
@@ -249,7 +243,6 @@ export default {
         localStorage.setItem('cartData', JSON.stringify(vm.cartData))
         $('#productModal').modal('hide')
       } else {
-        console.log('有這筆資料')
         let cache = {}
         let number = 0
         vm.cartData.forEach((item, index) => {
@@ -262,16 +255,11 @@ export default {
               origin_price: data.product.origin_price,
               price: data.product.price
             }
-            console.log('加入的cache', cache)
             vm.cartData.splice(index, 1)
-            console.log('刪除後的cartData', index, vm.cartData)
           }
         })
         vm.cartData.push(cache)
-        console.log('push後的cartData', vm.cartData)
         localStorage.setItem('cartData', JSON.stringify(vm.cartData))
-        const array = JSON.parse(localStorage.getItem('cartData')) || []
-        console.log('push後的localStorage', array)
       }
       vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
       vm.postCart()

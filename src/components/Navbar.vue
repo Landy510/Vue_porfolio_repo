@@ -34,7 +34,7 @@
               </a>
             </li>
             <li class="nav-item active">
-              <router-link to="/login" class="nav-link text-dark" title="管理者登入">
+              <router-link to="/login" class="nav-link login_btn" title="管理者登入">
                 <font-awesome-icon :icon="['fas', 'users-cog']" />
               </router-link>
             </li>
@@ -192,7 +192,6 @@ export default {
       vm.Status.isUploading = true
       vm.$http.get(api).then((response) => {
         vm.cart = response.data.data.carts
-        console.log('navbar購物車資料', vm.cart)
         localStorage.setItem('cartData', JSON.stringify(vm.cart))
         vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
         if (response.data.success) {
@@ -370,6 +369,12 @@ export default {
 }
 .location_part{
   height:162px;
+}
+.login_btn{
+  color:#000;
+}
+.login_btn:hover{
+  color:red;
 }
 .likeButton{
   color: black;
