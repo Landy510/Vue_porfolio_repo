@@ -165,7 +165,6 @@ export default {
   data () {
     return {
       cart: [],
-      cartData: JSON.parse(localStorage.getItem('carData')) || [], // 取出localStorage資料
       total_price: 0,
       total_length: 0,
       Status: {
@@ -192,8 +191,6 @@ export default {
       vm.Status.isUploading = true
       vm.$http.get(api).then((response) => {
         vm.cart = response.data.data.carts
-        localStorage.setItem('cartData', JSON.stringify(vm.cart))
-        vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
         if (response.data.success) {
           vm.Status.isUploading = false
           vm.total_price = response.data.data.total
@@ -214,73 +211,34 @@ export default {
     },
     addToCart (data) {
       const vm = this
-      const cartID = []
-      vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
-      vm.cartData.forEach((item, index) => {
-        cartID.push(item.product_id)
-      })
-      if (cartID.indexOf(data.id) === -1) {
-        const cartContent = {
-          product_id: data.id,
-          qty: 1,
-          name: data.title,
-          origin_price: data.origin_price,
-          price: data.price
-        }
-        vm.cartData.push(cartContent)
-        localStorage.setItem('cartData', JSON.stringify(vm.cartData))
-      } else {
-        let cache = {}
-        vm.cartData.forEach((item, index) => {
-          if (item.product_id === data.id) {
-            cache = {
-              product_id: data.id,
-              qty: item.qty += 1,
-              name: data.title,
-              origin_price: data.origin_price,
-              price: data.price
-            }
-            vm.cartData.splice(index, 1)
+      const target = vm.cart.filter(item => item.product.title === data.title)
+      if (target.length !== 0) {
+        const sameItem = target[0]
+        const sameItemID = sameItem.id
+        const updateQty = sameItem.qty + 1
+        vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${sameItemID}`).then(() => {
+          console.log('購物車刪除成功')
+        }).then(() => {
+          const cache = {
+            product_id: sameItem.product_id,
+            qty: updateQty
           }
+          vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache }).then(() => {
+            vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
+            vm.getList()
+          })
         })
-        vm.cartData.push(cache)
-        localStorage.setItem('cartData', JSON.stringify(vm.cartData))
+      } else {
+        const cache = {
+          product_id: data.id,
+          qty: 1
+        }
+        vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache }).then((response) => {
+          vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
+          vm.getList()
+        })
       }
-      vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
       vm.removeLike(data)
-      vm.postCart()
-    },
-    postCart () {
-      const vm = this
-      vm.isLoading = true
-      const cacheID = []
-      vm.$http.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
-        .then((res) => {
-          const cacheData = res.data.data.carts
-          cacheData.forEach((item) => {
-            cacheID.push(item.id)
-          })
-        }).then(() => {
-          cacheID.forEach((item) => {
-            vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${item}`).then(() => {
-              console.log('購物車已經清空')
-            })
-          })
-        }).then(() => {
-          vm.cartData.forEach((item) => {
-            const cache = {
-              product_id: item.product_id,
-              qty: item.qty
-            }
-            vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache })
-              .then(() => {
-                vm.cartData = []
-                localStorage.removeItem('cartData')
-                vm.isLoading = false
-                vm.getList()
-              })
-          })
-        })
     },
     callCart () {
       $('.cart_list').addClass('cartOpen')

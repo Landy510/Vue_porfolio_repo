@@ -115,7 +115,6 @@
 </template>
 
 <script>
-import $ from 'jquery'
 import Navbar from '../../components/Navbar.vue'
 import Footer from '../../components/Footer.vue'
 import { Carousel, Slide } from 'vue-carousel'
@@ -126,7 +125,6 @@ export default {
       products: [],
       lecture: {},
       carts: [],
-      carData: JSON.parse(localStorage.getItem('carData')) || [],
       qty: 1,
       isLoading: false,
       product_length: 0
@@ -152,8 +150,6 @@ export default {
       vm.$http.get(url).then((response) => {
         if (response.data.data.carts) {
           vm.carts = response.data.data.carts
-          localStorage.setItem('cartData', JSON.stringify(vm.carts))
-          vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
           vm.product_length = response.data.data.carts.length
         }
         vm.isLoading = false
@@ -177,75 +173,41 @@ export default {
     addToCart (data) {
       const vm = this
       if (vm.qty === 0) return
-      const cartID = []
-      vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
-      vm.cartData.forEach((item, index) => {
-        cartID.push(item.product_id)
-      })
-      if (cartID.indexOf(data.id) === -1) {
-        const cartContent = {
-          product_id: data.id,
-          qty: vm.qty,
-          name: data.title,
-          origin_price: data.origin_price,
-          price: data.price
-        }
-        vm.cartData.push(cartContent)
-        localStorage.setItem('cartData', JSON.stringify(vm.cartData))
-        $('#productModal').modal('hide')
-      } else {
-        let cache = {}
-        vm.cartData.forEach((item, index) => {
-          if (item.product_id === data.id) {
-            const number = item.qty + vm.qty
-            cache = {
-              product_id: data.id,
-              qty: number,
-              name: data.title,
-              origin_price: data.origin_price,
-              price: data.price
-            }
-            vm.cartData.splice(index, 1)
-          }
-        })
-        vm.cartData.push(cache)
-        localStorage.setItem('cartData', JSON.stringify(vm.cartData))
-        $('#productModal').modal('hide')
-      }
-      vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
-      vm.postCart()
-    },
-    postCart () {
-      const vm = this
       vm.isLoading = true
-      const cacheID = []
-      vm.$http.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
-        .then((res) => {
-          const cacheData = res.data.data.carts
-          cacheData.forEach((item) => {
-            cacheID.push(item.id)
-          })
-        }).then(() => {
-          cacheID.forEach((item) => {
-            vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${item}`).then(() => {
-              console.log('購物車已經清空')
+      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`
+      vm.$http.get(url).then((response) => {
+        if (response.data.data.carts) {
+          vm.carts = response.data.data.carts
+          vm.product_length = response.data.data.carts.length
+        }
+      }).then(() => {
+        const target = vm.carts.filter(item => item.product.title === data.title)
+        if (target.length !== 0) {
+          const sameItem = target[0]
+          const sameItemID = sameItem.id
+          const updateQty = sameItem.qty + vm.qty
+          vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${sameItemID}`).then(() => {
+            console.log('購物車刪除成功')
+          }).then(() => {
+            const cache = {
+              product_id: data.id,
+              qty: updateQty
+            }
+            vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache }).then(() => {
+              vm.getList()
+              vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
             })
           })
-        }).then(() => {
-          vm.cartData.forEach((item) => {
-            const cache = {
-              product_id: item.product_id,
-              qty: item.qty
-            }
-            vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache })
-              .then(() => {
-                vm.cartData = []
-                localStorage.removeItem('cartData')
-                vm.isLoading = false
-                vm.getList()
-              })
+        } else {
+          const cache = {
+            product_id: data.id,
+            qty: vm.qty
+          }
+          vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache }).then((response) => {
+            vm.getList()
           })
-        })
+        }
+      })
     },
     CounterCoupute (cartTotalLength) {
       const vm = this
@@ -255,6 +217,7 @@ export default {
   created () {
     this.orderId = this.$route.params.LectureId
     this.getProduct(this.orderId)
+    this.getList()
   },
   components: {
     Navbar,

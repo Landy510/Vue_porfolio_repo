@@ -45,11 +45,11 @@
                     </span>
                     <div class="input-group w-40 d-none d-md-flex">
                       <div class="input-group-prepend">
-                        <button type="button" class="btn btn-grey border border-dark rounded-0" @click="addToCart(item, -1)">-</button>
+                        <button type="button" class="btn btn-grey border border-dark rounded-0" @click="addToCart(item, -1)" :disabled="!clickable">-</button>
                       </div>
                       <input type="text" class="form-control text-center qty h-100" placeholder="0" aria-label="1" aria-describedby="basic-addon1" v-model="item.qty">
                       <div class="input-group-append">
-                        <button type="button" class="btn btn-grey border border-dark rounded-0" @click="addToCart(item, 1)">+</button>
+                        <button type="button" class="btn btn-grey border border-dark rounded-0" @click="addToCart(item, 1)" :disabled="!clickable">+</button>
                       </div>
                     </div>
                   </div>
@@ -58,11 +58,11 @@
 
                   <div class="input-group w-100 d-flex d-md-none">
                     <div class="input-group-prepend">
-                      <button type="button" class="btn btn-grey border border-dark rounded-0" @click="addToCart(item, -1)">-</button>
+                      <button type="button" class="btn btn-grey border border-dark rounded-0" @click="addToCart(item, -1)" :disabled="!clickable">-</button>
                     </div>
                     <input type="text" class="form-control text-center qty" placeholder="0" aria-label="1" aria-describedby="basic-addon1" v-model="item.qty">
                     <div class="input-group-append">
-                      <button type="button" class="btn btn-grey border border-dark rounded-0" @click="addToCart(item, 1)">+</button>
+                      <button type="button" class="btn btn-grey border border-dark rounded-0" @click="addToCart(item, 1)" :disabled="!clickable">+</button>
                     </div>
                   </div>
                 </td>
@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import $ from 'jquery'
+// import $ from 'jquery'
 import AlertMessage from '../../components/AlertMessage.vue'
 import Navbar from '../../components/Navbar.vue'
 import Footer from '../../components/Footer.vue'
@@ -118,12 +118,12 @@ export default {
     return {
       isLoading: false,
       carts: [],
-      cartData: JSON.parse(localStorage.getItem('carData')) || [],
       total: 0,
       final_total: 0,
       coupon_code: '',
       product_length: 0,
-      hasCoupon: false
+      hasCoupon: false,
+      clickable: true
     }
   },
   methods: {
@@ -134,13 +134,12 @@ export default {
       vm.$http.get(url).then((response) => {
         if (response.data.data.carts) {
           vm.carts = response.data.data.carts
-          localStorage.setItem('cartData', JSON.stringify(vm.carts))
-          vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
           vm.product_length = response.data.data.carts.length
           vm.total = response.data.data.total
           vm.final_total = response.data.data.final_total
         }
         vm.isLoading = false
+        vm.clickable = true
       })
     },
     delProduct (id) {
@@ -191,78 +190,36 @@ export default {
         data.qty -= num
       }
     },
-    postCart () {
-      const vm = this
-      vm.isLoading = true
-      const cacheID = []
-      vm.$http.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
-        .then((res) => {
-          const cacheData = res.data.data.carts
-          cacheData.forEach((item) => {
-            cacheID.push(item.id)
-          })
-        }).then(() => {
-          cacheID.forEach((item) => {
-            vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${item}`).then(() => {
-              console.log('購物車已經清空')
-            })
-          })
-        }).then(() => {
-          vm.cartData.forEach((item) => {
-            const cache = {
-              product_id: item.product_id,
-              qty: item.qty
-            }
-            vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache })
-              .then(() => {
-                vm.cartData = []
-                localStorage.removeItem('cartData')
-                vm.isLoading = false
-                vm.getList()
-              })
-          })
-        })
-    },
     addToCart (data, num) {
-      data.qty += num
       const vm = this
-      const cartID = []
-      vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
-      vm.cartData.forEach((item, index) => {
-        cartID.push(item.product_id)
-      })
-      if (cartID.indexOf(data.product_id) === -1) {
-        const cartContent = {
-          product_id: data.product_id,
-          qty: data.qty,
-          name: data.title,
-          origin_price: data.origin_price,
-          price: data.price
-        }
-        vm.cartData.push(cartContent)
-        localStorage.setItem('cartData', JSON.stringify(vm.cartData))
-        $('#productModal').modal('hide')
-      } else {
-        let cache = {}
-        let number = 0
-        vm.cartData.forEach((item, index) => {
-          if (item.product_id === data.product_id) {
-            number = item.qty + num
-            cache = {
-              product_id: data.product_id,
-              qty: number,
-              name: data.product.title,
-              origin_price: data.product.origin_price,
-              price: data.product.price
-            }
-            vm.cartData.splice(index, 1)
+      vm.clickable = false
+      data.qty += num
+      const target = this.carts.filter(item => item.product_id === data.product_id)
+      if (target.length !== 0) {
+        const sameItem = target[0]
+        const sameItemID = sameItem.id
+        const updateQty = data.qty
+        vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${sameItemID}`).then(() => {
+          console.log('購物車刪除成功')
+        }).then(() => {
+          const cache = {
+            product_id: data.product_id,
+            qty: updateQty
           }
+          vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache }).then(() => {
+            vm.getList()
+          })
         })
-        vm.cartData.push(cache)
-        localStorage.setItem('cartData', JSON.stringify(vm.cartData))
+      } else {
+        const cache = {
+          product_id: data.product_id,
+          qty: data.qty
+        }
+        vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache }).then(() => {
+          vm.isLoading = false
+          vm.getList()
+        })
       }
-      vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
-      vm.postCart()
     }
   },
   created () {

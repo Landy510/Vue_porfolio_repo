@@ -197,7 +197,6 @@ export default {
         loadingItem: ''
       },
       carts: [],
-      cartData: JSON.parse(localStorage.getItem('carData')) || [], // 取出localStorage資料
       product_length: 0,
       image_website: 'https://upload.cc/i1/2021/03/10/0QKA7j.jpg',
       image_website1: 'https://upload.cc/i1/2021/02/18/cyrh8S.jpg',
@@ -231,44 +230,47 @@ export default {
     },
     addToCart (data, qty = 1) {
       const vm = this
-      const cartID = []
-      vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
-      vm.cartData.forEach((item, index) => {
-        cartID.push(item.product_id)
-      })
-      if (cartID.indexOf(data.id) === -1) {
-        const cartContent = {
-          product_id: data.id,
-          qty: qty,
-          name: data.title,
-          origin_price: data.origin_price,
-          price: data.price
+      vm.isLoading = true
+      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`
+      vm.$http.get(url).then((response) => {
+        if (response.data.data.carts) {
+          vm.carts = response.data.data.carts
+          vm.product_length = response.data.data.carts.length
         }
-        vm.cartData.push(cartContent)
-        localStorage.setItem('cartData', JSON.stringify(vm.cartData))
-        $('#productModal').modal('hide')
-      } else {
-        let cache = {}
-        vm.cartData.forEach((item, index) => {
-          if (item.product_id === data.id) {
-            const number = item.qty + qty
-            cache = {
-              product_id: data.id,
-              qty: number,
-              name: data.title,
-              origin_price: data.origin_price,
-              price: data.price
+      }).then(() => {
+        const target = vm.carts.filter(item => item.product.title === data.title)
+        if (target.length !== 0) {
+          const sameItem = target[0]
+          const sameItemID = sameItem.id
+          const updateQty = sameItem.qty + qty
+          vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${sameItemID}`).then(() => {
+            console.log('購物車刪除成功')
+          }).then(() => {
+            const cache = {
+              product_id: sameItem.product_id,
+              qty: updateQty
             }
-            vm.cartData.splice(index, 1)
+            vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache }).then(() => {
+              vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
+              $('#productModal').modal('hide')
+              vm.getCart()
+              vm.isLoading = false
+            })
+          })
+        } else {
+          const cache = {
+            product_id: data.id,
+            qty: qty
           }
-        })
-        vm.cartData.push(cache)
-        localStorage.setItem('cartData', JSON.stringify(vm.cartData))
-        $('#productModal').modal('hide')
-      }
-      vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
+          vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache }).then((response) => {
+            $('#productModal').modal('hide')
+            vm.$bus.$emit('messsage:push', '已加入購物車', 'success')
+            vm.getCart()
+            vm.isLoading = false
+          })
+        }
+      })
       vm.lecturenum = ''
-      vm.postCart()
     },
     getCart () {
       const vm = this
@@ -277,44 +279,10 @@ export default {
       vm.$http.get(url).then((response) => {
         if (response.data.data.carts) {
           vm.carts = response.data.data.carts
-          localStorage.setItem('cartData', JSON.stringify(vm.carts))
-          vm.cartData = JSON.parse(localStorage.getItem('cartData')) || []
           vm.product_length = response.data.data.carts.length
         }
         vm.isLoading = false
       })
-    },
-    postCart () {
-      const vm = this
-      vm.isLoading = true
-      const cacheID = []
-      vm.$http.get(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`)
-        .then((res) => {
-          const cacheData = res.data.data.carts
-          cacheData.forEach((item) => {
-            cacheID.push(item.id)
-          })
-        }).then(() => {
-          cacheID.forEach((item) => {
-            vm.$http.delete(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${item}`).then(() => {
-              console.log('購物車已經清空')
-            })
-          })
-        }).then(() => {
-          vm.cartData.forEach((item) => {
-            const cache = {
-              product_id: item.product_id,
-              qty: item.qty
-            }
-            vm.$http.post(`${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`, { data: cache })
-              .then(() => {
-                vm.cartData = []
-                localStorage.removeItem('cartData')
-                vm.isLoading = false
-                vm.getCart()
-              })
-          })
-        })
     },
     activeCart () {
       $('.cart_list_cover').fadeToggle()

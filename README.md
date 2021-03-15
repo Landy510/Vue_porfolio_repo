@@ -77,3 +77,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 		* 因為你的購物車 icon 在右側，因此購物車的側欄從右側滑入會更符合使用者體驗。 -> OK! 2021/02/26
 
 	* 結帳表單
+
+2021.03.15
+* 功能部份
+	* 修正當按下Navbar.vue中，我的最愛將商品加入購物車後，Home.vue 和 SelfProduct.vue頁面的購物車不會跟著連動變化，造成重複商品
+	* 的數量不會被合併在一起的問題。
+	
