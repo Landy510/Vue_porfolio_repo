@@ -41,6 +41,7 @@
 <script>
 import Navbar from '../../components/Navbar.vue'
 import Footer from '../../components/Footer.vue'
+import axios from 'axios'
 import L from 'leaflet'
 let osmMap = {}
 const storeTile = ['Berserker 美麗華店', 'Berserker 南西店', 'Berserker 西門漢中店', 'Berserker 台中都會店', 'Berserker 佳瑪店', 'Berserker 大江購物店', 'Berserker 家樂福店', 'Berserker 勤美成品店']
@@ -86,6 +87,7 @@ export default {
   },
   mounted () {
     const vm = this
+    axios.defaults.withCredentials = false
     const api = 'https://datacenter.taichung.gov.tw/swagger/OpenData/8f477165-6874-4856-b60d-38029958e723'
     vm.$http.get(api).then((Response) => {
       vm.data = Response.data

@@ -28,8 +28,7 @@ Vue.use(VueAwesomeSwiper /* { default options with global component } */)
 Vue.use(VueAxios, axios)
 Vue.component('Loading', Loading)
 Vue.config.productionTip = false
-// axios.defaults.withCredentials = true
-axios.defaults.withCredentials = false
+axios.defaults.withCredentials = true
 Vue.filter('currency', currencyFilter)
 
 Object.keys(rules).forEach((rule) => {
